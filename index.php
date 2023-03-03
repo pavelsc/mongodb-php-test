@@ -16,7 +16,8 @@ try {
 
   $mongoHelper = new MongoHelper($config);
 
-  echo "-----start\r\n";
+  echo "Start...\r\n";
+  $start = hrtime(true);
 
   $data         = [
     'contact_id'   => 'LudKlcOeOjL1ESvkqcnx',
@@ -25,8 +26,8 @@ try {
   ];
   $checkContact = $mongoHelper->findOne($data, MONGO_FIND_OPTION);
   print_r($checkContact);
-
-  echo "-----end\r\n";
+  $time = (hrtime(true) - $start) / 1e9;
+  echo "Total time: {$time}s\r\n";
 } catch (Exception $e) {
   print_r($e);
 }

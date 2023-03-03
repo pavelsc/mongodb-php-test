@@ -5,9 +5,12 @@ namespace MongoDBTest;
 
 use Exception;
 use MongoDB\Client;
+use MongoDB\Collection;
+use MongoDB\Database;
 use MongoDB\DeleteResult;
 use MongoDB\Driver\Cursor;
 use MongoDB\InsertOneResult;
+use MongoDB\Operation\FindOneAndUpdate;
 use MongoDB\UpdateResult;
 
 class MongoHelper
@@ -17,8 +20,8 @@ class MongoHelper
   public string $replica_set;
   public string $database;
   public array|string $host;
-  public \MongoDB\Database $contactsDb;
-  private \MongoDB\Collection $contactsCollection;
+  public Database $contactsDb;
+  private Collection $contactsCollection;
 
   protected string $contactsCollectionName = 'associatedContacts';
   protected string $countersCollectionName = 'counters';
@@ -120,7 +123,7 @@ class MongoHelper
     $sequenceDoc = $sequenceCollection->findOneAndUpdate(
       ['_id' => $id],
       ['$inc' => ['sequence' => 1]],
-      ['returnDocument' => \MongoDB\Operation\FindOneAndUpdate::RETURN_DOCUMENT_AFTER]
+      ['returnDocument' => FindOneAndUpdate::RETURN_DOCUMENT_AFTER]
     );
     return $sequenceDoc->bsonSerialize()->sequence;
   }
