@@ -199,9 +199,12 @@ class MongoHelper
   }
 
   /**
+   * @param int $internalId1
+   * @param int $internalId2
+   * @return bool|array
    * @throws Exception
    */
-  public function getRealLink($internalId1, $internalId2): bool|array
+  public function getRealLink(int $internalId1, int $internalId2): bool|array
   {
     $linksCollection = $this->contactsDb->{$this->linksCollectionName};
     if (!empty($internalId1) and !empty($internalId2)) {
@@ -232,12 +235,12 @@ class MongoHelper
 
 
   /**
-   * @param $id
-   * @param $productId
+   * @param int $id
+   * @param int $productId
    * @return array|null
    * @throws Exception
    */
-  public function getLinkData($id, $productId): ?array
+  public function getLinkData(int $id, int $productId): ?array
   {
     if (empty($id) || empty($productId)) {
       throw new Exception('Empty data', 400);
@@ -257,7 +260,6 @@ class MongoHelper
 
     return $data ? (array)$data->bsonSerialize() : null;
   }
-
 
   /**
    * @param int $internalID
