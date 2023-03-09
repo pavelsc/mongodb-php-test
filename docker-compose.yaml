@@ -1,17 +1,16 @@
 version: '3.9'
 
 services:
-  mongophp:
+  php:
     tty: true
     build:
       context: ./
-      dockerfile: ./build/php8.1-mongodb/Dockerfile
+      dockerfile: build/php/Dockerfile
       args:
         APP_DIR: ${APP_CODE_PATH_CONTAINER}
     working_dir: ${APP_CODE_PATH_CONTAINER}
     networks:
       - php_network
-    container_name: ${CONTAINER_NAME_PREFIX}-demo
     environment:
       - DEBIAN_FRONTEND=noninteractive
 networks:
