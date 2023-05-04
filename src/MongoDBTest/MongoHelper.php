@@ -17,7 +17,7 @@ class MongoHelper
 {
   public string $username;
   public string $password;
-  public string $replica_set;
+  public string|null $replica_set;
   public string $database;
   public array|string $host;
   public Database $contactsDb;
@@ -32,7 +32,7 @@ class MongoHelper
     $this->host        = $data['host'];
     $this->username    = $data['username'];
     $this->password    = $data['password'];
-    $this->replica_set = $data['replica_set'];
+    $this->replica_set = $data['replica_set'] ?? null;
     $this->database    = $data['database'];
     $this->init();
   }

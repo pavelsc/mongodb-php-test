@@ -1,18 +1,39 @@
 version: '3.9'
 
 services:
-  php:
+  mongo-db:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    ports:
+      - '27018:27017'
+    volumes:
+      - db-data:/data/db
+    networks:
+      - php_network
+
+  mongo-php-app:
     tty: true
+    depends_on:
+      - mongo-db
     build:
       context: ./
       dockerfile: build/php/Dockerfile
       args:
         APP_DIR: ${APP_CODE_PATH_CONTAINER}
+    image: mongo-php-app:latest
     working_dir: ${APP_CODE_PATH_CONTAINER}
     networks:
       - php_network
     environment:
       - DEBIAN_FRONTEND=noninteractive
+
+volumes:
+  db-data:
+    external: true
+
 networks:
   php_network:
     driver: bridge

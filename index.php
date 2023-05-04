@@ -20,9 +20,9 @@ try {
   $start = hrtime(true);
 
   $data         = [
-    'contact_id'   => 'LudKlcOeOjL1ESvkqcnx',
+    'contact_id'   => 'L3udKlcOeOjL1ESvkqcnx',
     'contact_type' => 'mc_chat',
-    'product_id'   => 300023344,
+    'product_id'   => 300023333,
   ];
   $checkContact = $mongoHelper->findOne($data, MONGO_FIND_OPTION);
   print_r($checkContact);

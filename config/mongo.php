@@ -1,13 +1,11 @@
 <?php
 
 return [
-  "username"    => "",
-  "password"    => "",
+  "username"    => "root",
+  "password"    => "example",
   "database"    => "dev",
-  "replica_set" => "rs0",
+  "replica_set" => "",
   "host"        => [
-    "10.60.75.73:27017",
-    "10.60.75.74:27017",
-    "10.60.75.75:27017"
+    "mongo-db:27017"
   ]
 ];
