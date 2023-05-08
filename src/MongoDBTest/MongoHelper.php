@@ -56,7 +56,9 @@ class MongoHelper
     }
 
     try {
-      $client                   = new Client("mongodb://{$mongoDbAuth}{$host}/?{$replicaSet}");
+      $connStr = "mongodb://{$mongoDbAuth}{$host}/?{$replicaSet}";
+      echo $connStr . "\r\n";
+      $client                   = new Client($connStr);
       $this->contactsDb         = $client->{$this->database};
       $this->contactsCollection = $this->contactsDb->{$this->contactsCollectionName};
     } catch (Exception $e) {
