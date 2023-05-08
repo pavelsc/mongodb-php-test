@@ -27,6 +27,9 @@ class MongoHelper
   protected string $countersCollectionName = 'counters';
   protected string $linksCollectionName = 'contactsLinks';
 
+  /**
+   * @param array $data
+   */
   public function __construct(array $data)
   {
     $this->host        = $data['host'];
@@ -37,6 +40,9 @@ class MongoHelper
     $this->init();
   }
 
+  /**
+   * @return void
+   */
   public function init(): void
   {
     $host = $this->host;
@@ -67,7 +73,11 @@ class MongoHelper
     }
   }
 
+
   /**
+   * Insert Contact into DB
+   * @param $data
+   * @return InsertOneResult
    * @throws Exception
    */
   public function insert($data): InsertOneResult
@@ -80,7 +90,7 @@ class MongoHelper
   }
 
   /**
-   * Find many documents
+   * Find many contacts
    *
    * @param array $query
    * @param array $fields
@@ -101,10 +111,14 @@ class MongoHelper
     return $this->contactsCollection->findOne($query, $fields);
   }
 
-  public function getNextSequenceValue($id)
+  /**
+   * Get incremental id
+   * @param $id
+   * @return int
+   */
+  public function getNextSequenceValue($id): int
   {
     $sequenceCollection = null;
-    // ищем есть ли коллекция для сиквенсов countersCollection
     foreach ($this->contactsDb->listCollections() as $collectionInfo) {
       if ($collectionInfo->getName() == $this->countersCollectionName) {
         $sequenceCollection = $this->contactsDb->{$this->countersCollectionName};
@@ -115,7 +129,7 @@ class MongoHelper
     if ($sequenceCollection === null) {
       $this->contactsDb->{$this->countersCollectionName}->insertOne(
         [
-          '_id'      => "internal_id",
+          '_id'      => $id,
           'sequence' => 0
         ]
       );
@@ -134,11 +148,11 @@ class MongoHelper
   /**
    * @param array $condition
    * @param array $action
-   * @param $options
+   * @param array $options
    * @return UpdateResult
    * @throws Exception
    */
-  public function updateContacts(array $condition = [], array $action = [], $options = []): UpdateResult
+  public function updateContacts(array $condition = [], array $action = [], array $options = []): UpdateResult
   {
     if (empty($condition) || empty($action)) {
       throw new Exception('Empty data', 400);
@@ -147,14 +161,18 @@ class MongoHelper
     return $this->contactsCollection->updateMany($condition, $action, $options);
   }
 
+
   /**
+   * @param int $internalId1
+   * @param int $internalId2
+   * @param int $productId
+   * @return UpdateResult
    * @throws Exception
    */
-  public function addLink($internalId1, $internalId2, $productId): UpdateResult
+  public function addLink(int $internalId1, int $internalId2, int $productId): UpdateResult
   {
     $linksCollection = $this->contactsDb->{$this->linksCollectionName};
     if (!empty($internalId1) and !empty($internalId2)) {
-      // Создаем связь, если не было
       return $linksCollection->updateOne(
         [
           'id1' => $internalId1,
@@ -177,14 +195,17 @@ class MongoHelper
     }
   }
 
+
   /**
+   * @param $link
+   * @param $updateArr
+   * @return UpdateResult
    * @throws Exception
    */
   public function updateLink($link, $updateArr): UpdateResult
   {
     $linksCollection = $this->contactsDb->{$this->linksCollectionName};
     if (!empty($link)) {
-      // Создаем связь, если не было
       return $linksCollection->updateOne(
         [
           'product_id' => $link['product_id'],
@@ -361,6 +382,8 @@ class MongoHelper
 
 
   /**
+   * @param $data
+   * @return DeleteResult
    * @throws Exception
    */
   public function deleteContactNodes($data): DeleteResult
@@ -374,6 +397,9 @@ class MongoHelper
 
 
   /**
+   * @param $query
+   * @param $options
+   * @return Cursor
    * @throws Exception
    */
   public function findLinks($query, $options): Cursor
@@ -392,6 +418,10 @@ class MongoHelper
     return call_user_func_array([$this->contactsCollection, $name], $arguments);
   }
 
+  /**
+   * @param $data
+   * @return void
+   */
   public function cleanAll($data): void
   {
     $linksCollection = $this->contactsDb->{$this->linksCollectionName};
